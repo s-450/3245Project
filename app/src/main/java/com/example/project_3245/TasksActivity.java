@@ -4,8 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.ImageView;
+
+
+import java.util.Calendar;
 
 public class TasksActivity extends AppCompatActivity {
 
@@ -23,6 +30,45 @@ public class TasksActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle("Tasks");
         }
+
+        EditText editTextDate = findViewById(R.id.taskDate);
+        ImageView DatePickerIcon = findViewById(R.id.datePickerIcon);
+
+        DatePickerIcon.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    TasksActivity.this,
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        String date = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                        editTextDate.setText(date);
+                    },
+                    year, month, day);
+            datePickerDialog.show();
+        });
+
+
+        EditText editTextTime = findViewById(R.id.taskTime);
+        ImageView timePickerIcon = findViewById(R.id.timePickerIcon);
+
+        timePickerIcon.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+
+            TimePickerDialog timePickerDialog = new TimePickerDialog(
+                    TasksActivity.this,
+                    (view, selectedHour, selectedMinute) -> {
+                        String time = selectedHour + ":" + selectedMinute;
+                        editTextTime.setText(time);
+                    },
+                    hour, minute, true);
+            timePickerDialog.show();
+        });
+
     }
 
     @Override
