@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 // Testing if this was changed on GitHub
 // Another test for this by Manav
+// Another one from Manav
 public class MainActivity extends AppCompatActivity {
 
     @Override
