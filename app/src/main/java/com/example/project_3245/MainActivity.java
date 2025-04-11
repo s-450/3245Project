@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 // Testing if this was changed on GitHub
+// Another test for this by Manav
 public class MainActivity extends AppCompatActivity {
 
     @Override
