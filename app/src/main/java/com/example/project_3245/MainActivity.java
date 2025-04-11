@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 // Testing if this was changed on GitHub
 // Another test for this by Manav
@@ -17,7 +19,7 @@ import android.view.MenuItem;
 // Doing another test
 public class MainActivity extends AppCompatActivity {
 
-    Button, btn1, btn2;
+    Button btn1, btn2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
