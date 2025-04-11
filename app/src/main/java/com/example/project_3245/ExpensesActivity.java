@@ -6,9 +6,17 @@ import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class ExpensesActivity extends AppCompatActivity {
 
+    EditText num1, num2, num3;
+
+    TextView resultC;
+    Button add;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +31,14 @@ public class ExpensesActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle("Expenses");
         }
+
+        num1 = (EditText) findViewById(R.id.number1);
+        num2 = (EditText) findViewById(R.id.number2);
+        num3 = (EditText) findViewById(R.id.number3);
+        resultC = (TextView) findViewById(R.id.resultC);
+
+        add = (Button) findViewById(R.id.add);
+
     }
 
     @Override
@@ -32,5 +48,15 @@ public class ExpensesActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void totalValue(View v){
+        String value1 = num1.getText().toString();
+        String value2 = num2.getText().toString();
+        String value3 = num3.getText().toString();
+        Integer valueF = (Integer.parseInt(value1) + Integer.parseInt(value2) + Integer.parseInt(value3));
+
+        String result = valueF.toString();
+        resultC.setText(result);
     }
 }
