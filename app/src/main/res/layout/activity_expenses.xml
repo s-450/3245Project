@@ -13,12 +13,13 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:titleTextColor="@android:color/black" />
+
     <EditText
         android:id="@+id/number3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginTop="112dp"
+        android:layout_marginEnd="24dp"
         android:ems="10"
         android:hint="Food"
         android:inputType="number"
@@ -74,11 +75,26 @@
         app:layout_constraintTop_toBottomOf="@+id/num1" />
 
     <TextView
+        android:id="@+id/date"
+        android:layout_width="116dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="296dp"
+        android:background="#051D47"
+        android:text="Due Date"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/banner" />
+
+    <TextView
         android:id="@+id/result"
         android:layout_width="116dp"
         android:layout_height="58dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="200dp"
         android:background="#051D47"
         android:text="Monthly Total"
         android:textAlignment="center"
@@ -116,9 +132,8 @@
         android:id="@+id/add"
         android:layout_width="158dp"
         android:layout_height="65dp"
-        android:layout_marginStart="124dp"
-        android:layout_marginBottom="144dp"
-        android:onClick="totalValue"
+        android:layout_marginStart="116dp"
+        android:layout_marginBottom="16dp"
         android:text="Compute Total"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -129,8 +144,8 @@
         android:id="@+id/resultC"
         android:layout_width="210dp"
         android:layout_height="53dp"
-        android:layout_marginTop="128dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="24dp"
         android:text=""
         android:textAlignment="center"
         android:textColor="#FFFFFF"
@@ -153,5 +168,19 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/num2" />
+
+    <EditText
+        android:id="@+id/editTextDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="DD/MM/YYYY"
+        android:inputType="date"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.88"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/number3"
+        app:layout_constraintVertical_bias="0.116" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

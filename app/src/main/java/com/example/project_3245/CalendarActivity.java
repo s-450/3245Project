@@ -32,6 +32,7 @@ public class CalendarActivity extends AppCompatActivity {
 
     private DatabaseReference databaseTasks;
     private List<Task> taskList;
+    private List<Expense> expenseList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class CalendarActivity extends AppCompatActivity {
 
         databaseTasks = FirebaseDatabase.getInstance().getReference("tasks");
         taskList = new ArrayList<>();
-
+        expenseList = new ArrayList<>();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.black));
@@ -55,6 +56,7 @@ public class CalendarActivity extends AppCompatActivity {
         calendarView.setOnDateChangeListener((calendarView1, year, month, day) -> {
             String selectedDate = day + "/" + (month + 1) + "/" + year;
             queryTasksForDate(selectedDate);
+            queryExpensesForDate(selectedDate);
         });
     }
 
@@ -74,6 +76,7 @@ public class CalendarActivity extends AppCompatActivity {
                         }
                     }
                     showTaskDialog(selectedDate);
+                    showExpenseDialog(selectedDate);
                 } else {
                     Toast.makeText(CalendarActivity.this, "No tasks found for " + selectedDate, Toast.LENGTH_SHORT).show();
                 }
@@ -82,6 +85,34 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(CalendarActivity.this, "Error fetching tasks", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void queryExpensesForDate(String selectedDate) {
+        DatabaseReference databaseExpenses = FirebaseDatabase.getInstance().getReference("expenses");
+
+        databaseExpenses.orderByChild("expenseDate").equalTo(selectedDate).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot expenseSnapshot : dataSnapshot.getChildren()) {
+                        Expense expense = expenseSnapshot.getValue(Expense.class);
+                        String expenseId = expenseSnapshot.getKey();
+
+                        if (expense != null) {
+                            expense.setExpenseId(expenseId);
+                            expenseList.add(expense);
+                        }
+                    }
+                    showTaskDialog(selectedDate);
+                } else {
+                    Toast.makeText(CalendarActivity.this, "No expenses found for " + selectedDate, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(CalendarActivity.this, "Error fetching expenses", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -95,6 +126,22 @@ public class CalendarActivity extends AppCompatActivity {
         ListView listView = dialogView.findViewById(R.id.taskDialogListView);
         TaskAdapter taskAdapter = new TaskAdapter(this, taskList);
         listView.setAdapter(taskAdapter);
+
+        builder.setView(dialogView)
+                .setPositiveButton("Close", (dialog, id) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    private void showExpenseDialog(String selectedDate) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Expenses for " + selectedDate);
+
+        View dialogView = getLayoutInflater().inflate(R.layout.expense_dialog, null);
+        ListView listView = dialogView.findViewById(R.id.expenseDialogListView);
+        ExpenseAdapter expenseAdapter = new ExpenseAdapter(this, expenseList);
+        listView.setAdapter(expenseAdapter);
 
         builder.setView(dialogView)
                 .setPositiveButton("Close", (dialog, id) -> dialog.dismiss());
@@ -179,6 +226,48 @@ public class CalendarActivity extends AppCompatActivity {
             DatabaseReference deleteTaskRef = FirebaseDatabase.getInstance().getReference("tasks").child(taskId);
             deleteTaskRef.removeValue().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
+                    Toast.makeText(CalendarActivity.this, "Task deleted successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CalendarActivity.this, "Failed to delete task", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+    public class ExpenseAdapter extends ArrayAdapter<Expense> {
+
+        private final Context context;
+
+        public ExpenseAdapter(Context context, List<Expense> expenses) {
+            super(context, 0, expenses);
+            this.context = context;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(context).inflate(R.layout.task_list_item, parent, false);
+            }
+
+            Expense expense = getItem(position);
+
+            TextView taskNameTextView = convertView.findViewById(R.id.taskNameTextView);
+            taskNameTextView.setText(expense.getExpenseAmount());
+
+            ImageView deleteIcon = convertView.findViewById(R.id.deleteIcon);
+
+
+            deleteIcon.setOnClickListener(v -> {
+               deleteExpense(expense.getExpenseId());
+                finish();
+            });
+
+            return convertView;
+        }
+
+        private void deleteExpense(String expenseId) {
+            DatabaseReference deleteTaskRef = FirebaseDatabase.getInstance().getReference("expenses").child(expenseId);
+            deleteTaskRef.removeValue().addOnCompleteListener(expense -> {
+                if (expense.isSuccessful()) {
                     Toast.makeText(CalendarActivity.this, "Task deleted successfully", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(CalendarActivity.this, "Failed to delete task", Toast.LENGTH_SHORT).show();
